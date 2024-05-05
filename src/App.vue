@@ -1,43 +1,42 @@
 <script setup lang="ts">
-import { Buffer } from 'Buffer'
-
 const width = defineModel('width')
 const height = defineModel('height')
 const iterations = defineModel('iterations')
 const processors = defineModel('processors')
+const calculating = defineModel('calculating')
+width.value = 1000
+height.value = 1000
+iterations.value = 100
+calculating.value = false
 import SubmitForm from './components/SubmitForm.vue'
 import CanvasElement from './components/CanvasElement.vue'
 import { ref } from 'vue'
 const canvasComponent = ref(null)
 
-const emit = defineEmits({
+defineEmits({
   redraw: () => {
     console.log('redraw')
     return true
   }
 })
 
-console.log(`emit: ${emit}`)
-
-// async function triggerCanvasRedraw(width: number, height: number, iterations: number) {
 async function triggerCanvasRedraw() {
-  // this.$refs.canvasComponent.calculateMandelBrot()
   console.log(
     `app retrigger canvas drawing  width=${width.value} height=${height.value} iterations=${iterations.value}`
   )
   canvasComponent.value.calculateMandelBrot()
-
-  // FIXME: call canvas component function
 }
 </script>
 
 <template>
   <main>
+    <!-- FIXME: add component to display stats e.g. acurast id, connected  -->
     <SubmitForm
       v-model:height="height"
       v-model:width="width"
       v-model:iterations="iterations"
       v-model:processors="processors"
+      v-model:calculating="calculating"
       @redraw="triggerCanvasRedraw()"
     ></SubmitForm>
     <CanvasElement
@@ -46,6 +45,7 @@ async function triggerCanvasRedraw() {
       v-model:width="width"
       v-model:iterations="iterations"
       v-model:processors="processors"
+      v-model:calculating="calculating"
     ></CanvasElement>
   </main>
 </template>

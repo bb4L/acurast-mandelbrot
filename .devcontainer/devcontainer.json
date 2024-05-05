@@ -7,8 +7,8 @@
   "customizations": {
     "vscode": {
       "extensions": ["Vue.volar", "esbenp.prettier-vscode"]
-	},
-    }
+	}
+    },
 
   // Features to add to the dev container. More info: https://containers.dev/features.
   // "features": {},
