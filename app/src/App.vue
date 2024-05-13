@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const width = defineModel('width')
-const height = defineModel('height')
-const iterations = defineModel('iterations')
-const processors = defineModel('processors')
-const calculating = defineModel('calculating')
+const width = defineModel<number>('width')
+const height = defineModel<number>('height')
+const iterations = defineModel<number>('iterations')
+const processors = defineModel<string>('processors')
+const calculating = defineModel<boolean>('calculating')
 width.value = 1000
 height.value = 1000
 iterations.value = 100

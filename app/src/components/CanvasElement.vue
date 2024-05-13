@@ -1,14 +1,19 @@
 <script setup lang="ts">
-import { AcurastClient } from '@acurast/dapp'
-const width = defineModel('width')
-const height = defineModel('height')
-const iterations = defineModel('iterations')
-const processors = defineModel('processors')
-const calculating = defineModel('calculating')
+import {
+  type PingCall,
+  type CalculateMandelBrotPartResponse,
+  type HeatPoint
+} from 'acurast-mandelbrot-utils/interfaces'
+import { AcurastClient, type Message } from '@acurast/dapp'
+const width = defineModel<number>('width')
+const height = defineModel<number>('height')
+const iterations = defineModel<number>('iterations')
+const processors = defineModel<string>('processors')
+const calculating = defineModel<boolean>('calculating')
 var acurastClient: any = undefined
 var keys: any = undefined
 
-function heatToRGB(heatValue) {
+function heatToRGB(heatValue: number) {
   // Interpolate between blue and red
   var r = Math.floor(255 * heatValue)
   var b = Math.floor(255 * (1 - heatValue))
@@ -17,7 +22,7 @@ function heatToRGB(heatValue) {
   return { r: r, g: g, b: b }
 }
 
-async function drawCanvas(data) {
+async function drawCanvas(data: HeatPoint[]) {
   console.log('drawing canvas ...')
   const canvas = document.getElementById('mandelBrotCanvas')
   var ctx = canvas.getContext('2d')
@@ -80,8 +85,12 @@ async function connectAcurastClient() {
       acurastClient = new AcurastClient(server)
       await acurastClient.start({ secretKey: keys.privateKey, publicKey: keys.publicKey })
       acurastClient.onMessage(async (message: Message) => {
-        const parsed: any = JSON.parse(message.payload.toString())
-        await drawCanvas(parsed.result)
+        const parsed: PingCall | CalculateMandelBrotPartResponse = JSON.parse(
+          message.payload.toString()
+        )
+        if (parsed.method == ({} as CalculateMandelBrotPartResponse).method) {
+          await drawCanvas(parsed.points)
+        }
       })
       return
     } catch (error) {

@@ -7,17 +7,17 @@
   "customizations": {
     "vscode": {
       "extensions": ["Vue.volar", "esbenp.prettier-vscode"]
-	}
-    },
+    }
+  },
 
   // Features to add to the dev container. More info: https://containers.dev/features.
   // "features": {},
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  // "forwardPorts": [],
+  "appPort": [5173]
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "yarn install"
+  // "postCreateCommand": "yarn install"
 
   // Configure tool-specific properties.
   // "customizations": {},

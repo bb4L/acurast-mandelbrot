@@ -5,7 +5,6 @@ const iterations = defineModel('iterations')
 const processors = defineModel('processors')
 const calculating = defineModel('calculating')
 const emit = defineEmits(['redraw'])
-// calculating.value = false
 </script>
 
 <template>

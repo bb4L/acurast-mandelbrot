@@ -9,8 +9,12 @@ permissions:
   pages: write
   id-token: write
 concurrency:
-  group: 'pages'
+  group: "pages"
   cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: ./app
 
 jobs:
   gh-pages-deploy:
@@ -26,6 +30,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Link Utils (1/2)
+        run: yarn link
+        working-directory: ./shared_utils
+      - name: Link Utils (2/2)
+        run: yarn link "acurast-mandelbrot-utils"
       - name: Install dependencies
         run: yarn install
       - name: Build
@@ -36,7 +45,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload dist folder
-          path: './dist'
+          path: "./app/dist"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
