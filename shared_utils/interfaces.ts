@@ -11,7 +11,8 @@ export interface CalculateMandelBrotPartCall {
 
 export interface CalculateMandelBrotPartResponse {
   method: "calculateMandelbrotPart";
-  points: HeatPoint[];
+  arguments: string;
+  result: HeatPoint[];
 }
 
 export interface PingCall {

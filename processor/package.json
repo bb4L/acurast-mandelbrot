@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "bundle": "npm run build && webpack --mode=development --config webpack.config.js --entry=./dist/index.js --output-path ./ && terser --ecma=12 ./main.js -o ./index.min.js && npm run prepend",
+    "bundle": "yarn run build && webpack --mode=development --config webpack.config.js --entry=./dist/index.js --output-path ./ && terser --ecma=12 ./main.js -o ./index.min.js && yarn run prepend",
     "prepend": "echo 'const self = {};' > temp.js && cat index.min.js >> temp.js && mv temp.js index.min.js"
   },
   "dependencies": {

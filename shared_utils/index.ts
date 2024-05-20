@@ -1,4 +1,4 @@
-import {
+import type {
   PingCall,
   Point,
   CalculateMandelBrotPartCall,
@@ -7,7 +7,7 @@ import {
   MandelBrotConfig,
 } from "./interfaces";
 
-export {
+export type {
   PingCall,
   Point,
   CalculateMandelBrotPartCall,
