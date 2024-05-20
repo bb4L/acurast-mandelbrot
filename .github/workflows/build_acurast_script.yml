@@ -1,0 +1,42 @@
+name: Build Acurast Script
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+concurrency:
+  group: "buildScript"
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: ./processor
+
+jobs:
+  build-script:
+    name: Build and upload Script
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Link Utils (1/2)
+        run: yarn link
+        working-directory: ./shared_utils
+      - name: Link Utils (2/2)
+        run: yarn link "acurast-mandelbrot-utils"
+      - name: Install dependencies
+        run: yarn install
+      - name: Build
+        run: yarn run bundle
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: acruast-script
+          path: "./processor/index.min.js"
