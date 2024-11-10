@@ -9,6 +9,23 @@ export interface CalculateMandelBrotPartCall {
   };
 }
 
+export interface MandelBrotHeatCall {
+  method: "mandelbrotHeat";
+  arguments: MandelBrotHeatCallArguments;
+}
+
+export interface MandelBrotHeatCallArguments {
+  startPoint: Point;
+  amountOfValues: number;
+  config: MandelBrotConfig;
+}
+
+export interface MandelBrotHeatCallResponse {
+  method: "mandelbrotHeat";
+  arguments: MandelBrotHeatCallArguments;
+  result: number[];
+}
+
 export interface CalculateMandelBrotPartResponse {
   method: "calculateMandelbrotPart";
   arguments: string;
@@ -17,6 +34,7 @@ export interface CalculateMandelBrotPartResponse {
 
 export interface PingCall {
   method: "ping";
+  arguments: string;
 }
 
 export interface PingResponse {
@@ -36,4 +54,9 @@ export interface MandelBrotConfig {
   height: number;
   width: number;
   maxIterations: number;
+}
+
+export interface MinHeatPoint {
+  x: number;
+  heat: number;
 }

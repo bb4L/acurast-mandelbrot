@@ -9,7 +9,7 @@
       "extensions": ["Vue.volar", "esbenp.prettier-vscode"]
     }
   },
-  "forwardPorts": [5173]
+  "forwardPorts": [5173],
 
   // Features to add to the dev container. More info: https://containers.dev/features.
   // "features": {},
@@ -18,7 +18,7 @@
   // "appPort": [5173]
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  // "postCreateCommand": "yarn install"
+  "postCreateCommand": "npm install -g @acurast/cli && yarn global add tsx"
 
   // Configure tool-specific properties.
   // "customizations": {},

@@ -1,11 +1,23 @@
-const path = require("path");
-const webpack = require("webpack");
+const { resolve } = require("path");
+
 module.exports = {
+  entry: "./src/index.ts",
+  mode: "production",
   output: {
-    path: path.resolve(__dirname, "dist"),
-    library: "beacon",
-    libraryTarget: "umd",
+    filename: "bundle.js",
+    path: resolve(__dirname, "dist"),
   },
-  resolve: { fallback: { crypto: false, fs: false } },
-  plugins: [new webpack.ProvidePlugin({ Buffer: ["buffer", "Buffer"] })],
+  resolve: {
+    extensions: [".ts", ".js"],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.ts$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
+      },
+    ],
+  },
+  target: "node",
 };

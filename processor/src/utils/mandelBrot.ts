@@ -1,20 +1,29 @@
-import { HeatPoint, MandelBrotConfig, Point } from "acurast-mandelbrot-utils";
+import type {
+  MandelBrotConfig,
+  Point,
+  MandelBrotHeatCallArguments,
+} from "../sharedUtils/interfaces";
+import { getPoint } from "../sharedUtils/coordinateHandling";
 
-async function calculateHeatForArray(
-  coordinates: Point[],
-  config: MandelBrotConfig
-): Promise<HeatPoint[]> {
-  return await Promise.all(
-    coordinates.map(async (item) => {
-      return calculateMandelbrotHeat(item, config);
-    })
-  );
+export async function calculateMandelbrotHeatValues(
+  args: MandelBrotHeatCallArguments
+) {
+  let promises: Promise<number>[] = [];
+  for (let x = 0; x < args.amountOfValues; x++) {
+    promises.push(
+      calculateMandelbrotHeat(
+        getPoint(args.startPoint, x, args.config),
+        args.config
+      )
+    );
+  }
+  return await Promise.all(promises);
 }
 
 async function calculateMandelbrotHeat(
   point: Point,
   config: MandelBrotConfig
-): Promise<HeatPoint> {
+): Promise<number> {
   const xmin = -2.0,
     xmax = 1.0;
   const ymin = -1.5,
@@ -34,7 +43,5 @@ async function calculateMandelbrotHeat(
       break;
     }
   }
-  return { x: point.x, y: point.y, heat: heat };
+  return heat;
 }
-
-export { calculateHeatForArray, calculateMandelbrotHeat };

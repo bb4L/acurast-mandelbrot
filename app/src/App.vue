@@ -8,6 +8,7 @@ width.value = 1000
 height.value = 1000
 iterations.value = 100
 calculating.value = false
+processors.value = ''
 import SubmitForm from './components/SubmitForm.vue'
 import CanvasElement from './components/CanvasElement.vue'
 import { ref } from 'vue'
@@ -26,6 +27,13 @@ async function triggerCanvasRedraw() {
   )
   canvasComponent.value.calculateMandelBrot()
 }
+
+async function triggerCanvasRedrawMin() {
+  console.log(
+    `app retrigger canvas drawing  width=${width.value} height=${height.value} iterations=${iterations.value}`
+  )
+  canvasComponent.value.calculateMandelBrotMin()
+}
 </script>
 
 <template>
@@ -38,6 +46,7 @@ async function triggerCanvasRedraw() {
       v-model:processors="processors"
       v-model:calculating="calculating"
       @redraw="triggerCanvasRedraw()"
+      @redrawMin="triggerCanvasRedrawMin()"
     ></SubmitForm>
     <CanvasElement
       ref="canvasComponent"
