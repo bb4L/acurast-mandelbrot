@@ -4,7 +4,7 @@ const height = defineModel('height')
 const iterations = defineModel('iterations')
 const processors = defineModel('processors')
 const calculating = defineModel('calculating')
-const emit = defineEmits(['redraw'])
+const emit = defineEmits(['redraw', 'redrawMin'])
 </script>
 
 <template>

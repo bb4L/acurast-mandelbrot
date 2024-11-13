@@ -1,29 +1,46 @@
 import { messageHandler } from "./utils/ws";
+import { log_data } from "./utils/logging";
+import { hexToString, stringToHex } from "./sharedUtils/hex";
 
 declare const _STD_: any;
 
 _STD_.ws.open(
   // open a websocket connection to the provided server
   [
-    "wss://websocket-proxy-1.prod.gke.acurast.com/",
-    "wss://websocket-proxy-2.prod.gke.acurast.com/",
+    "wss://websocket-proxy-1.prod.gke.acurast.com",
+    "wss://websocket-proxy-2.prod.gke.acurast.com",
   ],
   () => {
-    console.log("open: success");
     _STD_.ws.registerPayloadHandler(
-      async (payload: {
-        sender: string;
-        recipient: string;
-        payload: string;
-      }) => {
-        await _STD_.ws.send(
-          payload.sender,
-          await messageHandler(payload as any)
-        );
+      async (msg: { sender: string; recipient: string; payload: string }) => {
+        try {
+          const decoded = hexToString(msg.payload);
+
+          try {
+            let result = await messageHandler(hexToString(msg.payload as any));
+            _STD_.ws.send(
+              msg.sender,
+              stringToHex(result),
+              () => {},
+              (msg: any) => {}
+            );
+          } catch (e: any) {
+            _STD_.ws.send(
+              msg.sender,
+              stringToHex(
+                JSON.stringify({ method: "error", message: e.toString() })
+              ),
+              () => {},
+              (msg: any) => {}
+            );
+          }
+        } catch (e) {}
       }
     );
   },
   (err: any) => {
+    log_data({ data: "open error", exception: err });
     console.log("open: error " + err);
   }
 );
+log_data({ data: "end of script" });

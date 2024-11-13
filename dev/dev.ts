@@ -1,5 +1,5 @@
 import { AcurastClient, Message } from "@acurast/dapp";
-import { messageHandler } from "./src/utils/ws";
+let start = Date.now();
 
 async function generateKeys() {
   const keyPair = await crypto.subtle.generateKey(
@@ -47,7 +47,8 @@ async function generateKeys() {
 }
 
 const acurastClient = new AcurastClient(
-  "wss://websocket-proxy-1.prod.gke.acurast.com" /* Acurast P2P WebSocket Server */
+  // "wss://websocket-proxy-1.prod.gke.acurast.com" /* Acurast P2P WebSocket Server */,
+  "wss://websocket-proxy-2.prod.gke.acurast.com" /* Acurast P2P WebSocket Server */
 );
 
 (async () => {
@@ -60,7 +61,37 @@ const acurastClient = new AcurastClient(
   );
 
   acurastClient.onMessage(async (message: Message) => {
-    await acurastClient.send(message.sender, await messageHandler(message));
+    try {
+      let receivedAt = Date.now();
+      console.log("sinceStart", Math.floor((receivedAt - start) / 1000));
+      console.log("received: ", message);
+      console.log("received payload: ", message.payload.toString());
+    } catch (error) {
+      console.log(`error`, error);
+    }
     return;
+  });
+
+  [
+    "0x02a1199d238ac5069edb662e256a167b3aa8fd173ef9c8721f4d73de40e0082afd",
+    // DEPLOYMENT_ADDRESS
+  ].forEach(async (element) => {
+    start = Date.now();
+    acurastClient.send(element, JSON.stringify({ method: "ping" }));
+    acurastClient.send(
+      element,
+      JSON.stringify({
+        method: "mandelbrotHeat",
+        arguments: {
+          startPoint: { x: 0, y: 0 },
+          amountOfValues: 2000,
+          config: {
+            height: 1000,
+            width: 1000,
+            maxIterations: 100,
+          },
+        },
+      })
+    );
   });
 })();

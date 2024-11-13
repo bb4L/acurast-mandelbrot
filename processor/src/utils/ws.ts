@@ -1,62 +1,36 @@
-import { Message } from "@acurast/dapp";
-import {
-  CalculateMandelBrotPartCall,
-  PingCall,
-  Point,
-} from "acurast-mandelbrot-utils";
-import { calculateHeatForArray } from "./mandelBrot";
+import type { PingCall, MandelBrotHeatCall } from "../sharedUtils/interfaces";
 
-export async function messageHandler(message: Message) {
-  const parsed: CalculateMandelBrotPartCall | PingCall | any = JSON.parse(
-    message.payload.toString()
-  );
+import { calculateMandelbrotHeatValues } from "./mandelBrot";
+import { log_data } from "./logging";
 
+export async function messageHandler(payload: string) {
   try {
-    switch (parsed.method) {
-      case "ping":
-        return Buffer.from(JSON.stringify({ result: "pong" }), "utf8").toString(
-          "hex"
-        );
+    const parsed: PingCall | MandelBrotHeatCall | any = JSON.parse(payload);
 
-      case "calculateMandelbrotPart":
-        let points: Point[] = [];
-        for (let i = parsed.arguments.startX; i < parsed.arguments.endX; i++) {
-          for (
-            let j = parsed.arguments.startY;
-            j < parsed.arguments.endY;
-            j++
-          ) {
-            points.push({ x: i, y: j });
-          }
-        }
-
-        const result = await calculateHeatForArray(
-          points,
-          parsed.arguments.config
-        );
-
-        console.log("returning calculation");
-        return Buffer.from(
-          JSON.stringify({
-            method: "calculateMandelbrotPart",
+    try {
+      switch (parsed.method) {
+        case "ping":
+          return JSON.stringify({ method: "ping", result: "pong" });
+        case "mandelbrotHeat":
+          return JSON.stringify({
+            method: parsed.method,
             arguments: parsed.arguments,
-            result: result,
-          }),
-          "utf8"
-        ).toString("hex");
+            result: await calculateMandelbrotHeatValues(parsed.arguments),
+          });
+      }
+    } catch (error_value: any) {
+      log_data({ data: "message handler error", error: error_value });
+      return JSON.stringify({
+        result: "error when handling request" + error_value.toString(),
+      });
     }
-  } catch (error) {
-    return Buffer.from(
-      JSON.stringify({
-        result: "error when handling request",
-      }),
-      "utf8"
-    ).toString("hex");
+    return JSON.stringify({
+      result: `wrong method ${parsed.method} `,
+    });
+  } catch (error: any) {
+    return JSON.stringify({
+      method: "error in parsing",
+      result: error.toString(),
+    });
   }
-  return Buffer.from(
-    JSON.stringify({
-      result: "wrong method",
-    }),
-    "utf8"
-  ).toString("hex");
 }

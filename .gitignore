@@ -1,3 +1,10 @@
 **/node_modules/**/*
 **/dist/**/*
 **/*.log
+**/acurast.json
+**/.env
+**/*.bak
+**/*.lock
+**/*.txt
+**/*.min.js
+**/.acurast
