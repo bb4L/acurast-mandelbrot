@@ -26,11 +26,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Link Utils (1/2)
-        run: yarn link
-        working-directory: ./shared_utils
-      - name: Link Utils (2/2)
-        run: yarn link "acurast-mandelbrot-utils"
+      - name: prepare
+        run: yarn run prepare
       - name: Install dependencies
         run: yarn install
       - name: Build
