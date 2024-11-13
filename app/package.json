@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "prepare": "ln -s ../sharedUtils/ ./src/sharedUtils",
+    "prepare": "ln -s ../sharedUtils/ ./src/sharedUtils || echo '' ",
     "dev": "vite --host 0.0.0.0",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
