@@ -4,7 +4,7 @@
   "author": "bb4L",
   "main": "./dist.bundle.js",
   "scripts": {
-    "prepare": "cp -r ../sharedUtils sharedUtils",
+    "prepare": "cp -r ../sharedUtils ./src/sharedUtils",
     "start": "yarn run build && node ./dist/bundle.js",
     "build": "webpack",
     "bundle": "yarn run build",
